@@ -1,0 +1,36 @@
+import os
+import shutil
+from tqdm import tqdm
+
+
+def rename_files_in_folder(folder_path, search_term, replace_term):
+    # 遍历文件夹中的所有文件
+    for filename in os.listdir(folder_path):
+        if search_term in filename:
+            # 构建新的文件名
+            new_filename = filename.replace(search_term, replace_term)
+
+            # 构建完整的文件路径
+            old_filepath = os.path.join(folder_path, filename)
+            new_filepath = os.path.join(folder_path, new_filename)
+
+            # 重命名文件
+            shutil.move(old_filepath, new_filepath)
+
+            print(f"已重命名文件: {filename} -> {new_filename}")
+
+
+if __name__ == "__main__":
+    # 调用函数进行文件夹中文件的查找和重命名
+    save_dir = os.path.join(os.getcwd(), "DownloadFiles")  # 文件夹路径
+
+    with open('rename.txt', 'r', encoding='utf-8') as file:
+        names = file.readlines()
+
+    i = 1
+    for name in names:
+        # 提取文件名，需要用strip去掉换行符
+        ori_name = name.split('+')[-1].strip() + ".mp4"
+        new_name = 'p{} '.format(i) + ori_name
+        rename_files_in_folder(save_dir, ori_name, new_name)
+        i = i + 1
